@@ -37,6 +37,25 @@ defmodule Tfcon.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+    @doc """
+  Gets a single user by account_number.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user_by_account_number!(123)
+      %User{}
+
+      iex> get_user_by_account_number!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user_by_account_number!(account_number) do
+    query = from u in User, select: u, where: u.account_number == ^account_number
+    Repo.one(query)
+  end
+
   @doc """
   Creates a user.
 
@@ -116,20 +135,19 @@ defmodule Tfcon.Accounts do
       {:ok, %User{}}
 
       iex> authenticate_user(invalid_account_number, invalid_password) # for a user with 1k in balance
-      {:error, :invalid_credentials}
+      {:error, "Invalid credentials"}
 
   """
   def authenticate_user(account_number, plain_text_password) do
-    query = from u in User, select: u, where: u.account_number == ^account_number
-
-    case Repo.one(query) do
+    user = get_user_by_account_number!(account_number)
+    case user do
       nil ->
-        {:error, :invalid_credentials}
+        {:error, "Invalid credentials"}
       user ->
         if Bcrypt.verify_pass(plain_text_password, user.password) do
           {:ok, user}
         else
-          {:error, :invalid_credentials}
+          {:error, "Invalid credentials"}
         end
     end
   end

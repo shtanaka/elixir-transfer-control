@@ -2,10 +2,9 @@ defmodule Tfcon.AccountsTest do
   use Tfcon.DataCase
 
   alias Tfcon.Accounts
+  alias Tfcon.Accounts.User
 
   describe "users" do
-    alias Tfcon.Accounts.User
-
     @valid_password "somepassword"
     @updated_password "someupdatedpassword"
     @not_registered_password "somepasswords"
@@ -31,6 +30,11 @@ defmodule Tfcon.AccountsTest do
     test "get_user!/1 returns the user with given id" do
       user = user_fixture()
       assert Accounts.get_user!(user.user_id) == user
+    end
+
+    test "get_user_by_account_number!/1 returns the user with given account_number" do
+      user = user_fixture()
+      assert Accounts.get_user_by_account_number!(user.account_number) == user
     end
 
     test "create_user/1 with valid data creates an user" do
@@ -68,18 +72,18 @@ defmodule Tfcon.AccountsTest do
 
     test "authenticate_user/2 with invalid password does not authenticate user" do
       %User{account_number: account_number} = user_fixture()
-      assert {:error, :invalid_credentials} = Accounts.authenticate_user(account_number, @not_registered_password)
+      assert {:error, "Invalid credentials"} = Accounts.authenticate_user(account_number, @not_registered_password)
     end
 
     test "authenticate_user/2 with invalid account_number does not authenticate user" do
-      assert {:error, :invalid_credentials} = Accounts.authenticate_user(999999999, @valid_password)
+      assert {:error, "Invalid credentials"} = Accounts.authenticate_user(999999999, @valid_password)
     end
 
     test "change_user_password/2 with valid password successfully completes" do
       %User{account_number: account_number} = user = user_fixture()
       Accounts.change_user_password(user, @updated_password)
       assert {:ok, %User{}} = Accounts.authenticate_user(account_number, @updated_password)
-      assert {:error, :invalid_credentials} = Accounts.authenticate_user(account_number, @valid_password)
+      assert {:error, "Invalid credentials"} = Accounts.authenticate_user(account_number, @valid_password)
     end
 
     test "change_user_password/2 with invalid password does not complete" do
