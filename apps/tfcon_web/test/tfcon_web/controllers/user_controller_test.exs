@@ -6,9 +6,9 @@ defmodule TfconWeb.UserControllerTest do
     alias Tfcon.Guardian
 
     test "POST /api/v1/users returns 401 for not logged in user", %{conn: conn} do
-      response = conn |> get("/api/v1/users") |> text_response(401)
+      response = conn |> get("/api/v1/users") |> json_response(401)
 
-      assert response == "unauthenticated"
+      assert response == %{"error" => "Not Authorized"}
     end
 
     test "POST /api/v1/users list all users for logged in user", %{conn: conn} do
@@ -27,9 +27,9 @@ defmodule TfconWeb.UserControllerTest do
     end
 
     test "POST /api/v1/users/:account_number returns 401 for not logged in user", %{conn: conn} do
-      response = conn |> get("/api/v1/users/1") |> text_response(401)
+      response = conn |> get("/api/v1/users/1") |> json_response(401)
 
-      assert response == "unauthenticated"
+      assert response == %{"error" => "Not Authorized"}
     end
 
     test "POST /api/v1/users/:account_number returns 404 for not existing account_number", %{conn: conn} do
