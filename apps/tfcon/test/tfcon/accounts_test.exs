@@ -1,5 +1,6 @@
 defmodule Tfcon.AccountsTest do
   use Tfcon.DataCase
+  use Tfcon.Fixtures, [:user]
 
   alias Tfcon.Accounts
   alias Tfcon.Accounts.User
@@ -12,15 +13,6 @@ defmodule Tfcon.AccountsTest do
     @valid_attrs %{name: "some name", password: @valid_password}
     @update_attrs %{name: "some updated name"}
     @invalid_attrs %{name: nil, password: @invalid_password}
-
-    def user_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Accounts.create_user()
-
-      user
-    end
 
     test "list_users/0 returns all users" do
       user = user_fixture()

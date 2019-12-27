@@ -11,8 +11,15 @@ defmodule TfconWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
-    plug Guardian.Plug.LoadResource
+  end
+
+  pipeline :auth do
+    plug Tfcon.Guardian.Pipeline
+  end
+
+  pipeline :ensure_auth do
+    plug Tfcon.Guardian.Pipeline
+    plug Guardian.Plug.EnsureAuthenticated
   end
 
   scope "/", TfconWeb do
@@ -24,7 +31,7 @@ defmodule TfconWeb.Router do
   scope "/api/v1", TfconWeb do
     post "/auth", AuthController, :create
 
-    pipe_through :api
-    # resources "/users", UserController
+    pipe_through :ensure_auth
+    resources "/users", UserController, param: "account_number"
   end
 end

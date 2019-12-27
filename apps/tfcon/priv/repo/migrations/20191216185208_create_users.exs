@@ -7,6 +7,7 @@ defmodule Tfcon.Repo.Migrations.CreateUsers do
       add :account_number, :integer
       add :name, :string
       add :balance, :float
+      add :password, :string
 
       timestamps()
     end
