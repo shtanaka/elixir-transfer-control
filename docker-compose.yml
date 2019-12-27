@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 
 services:
   db:
@@ -12,20 +12,22 @@ services:
       - pgdata:/var/lib/postgresql/data
   
   phoenix:
-    build:
-      context: .
+    build: .
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    ports:
+      - "4000:4000"
+    depends_on: 
+      - db
     environment:
       DB_PORT: 5432
       DB_NAME: tfcon_dev
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_HOST: db
-    volumes:
-      - ./:/app
-    ports:
-      - "4000:4000"
-    depends_on: 
-      - db
-  
+    command:
+      - ./entrypoint.sh
 volumes:
   pgdata:

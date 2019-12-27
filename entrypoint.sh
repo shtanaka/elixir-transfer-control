@@ -1,15 +1,18 @@
-#!/bin/bash
-while ! pg_isready -q -h $DB_HOST -p $DB_PORT -U $DB_USERNAME
-do
-  echo "$(date) - waiting for db"
-  sleep 2
+#!/bin/sh
+
+set -e
+mix deps.get
+
+cd apps/tfcon_web/assets && npm install
+cd ../../..
+
+while ! pg_isready -q -h $DB_HOST -p $DB_PORT -U $DB_USERNAME; do
+  >&2 echo "Postgres is unavailable - sleeping"
+  sleep 1
 done
 
-if [[ -z `psql -Atqc "\\list $DB_NAME"` ]]; then
-  echo "Database $DB_NAME does not exist. Creating..."
-  mix ecto.create
-  mix ecto.migrate
-  echo "Database $DB_NAME created."
-fi
+echo "\nPostgres is available: continuing with database setup..."
 
-exec mix phx.server
+mix ecto.create
+mix ecto.migrate
+mix phx.server
