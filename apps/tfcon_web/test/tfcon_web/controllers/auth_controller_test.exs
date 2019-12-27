@@ -1,4 +1,4 @@
-defmodule TfconWeb.PageControllerTest do
+defmodule TfconWeb.AuthControllerTest do
   use TfconWeb.ConnCase
 
   describe "auth api" do
