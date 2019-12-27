@@ -17,16 +17,16 @@ defmodule Tfcon.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :account_number])
+    |> cast(attrs, [:name, :account_number, :balance])
     |> account_number()
-    |> validate_number(:balance, greater_than_or_equal_to: 0.0)
     |> validate_required([:name, :account_number])
+    |> validate_number(:balance, greater_than_or_equal_to: 0.0)
     |> unique_constraint(:account_number)
   end
 
   defp account_number(changeset) do
     case changeset do
-      %Ecto.Changeset{valid?: true} ->
+      %Ecto.Changeset{valid?: true, data: %{account_number: nil}} ->
         put_change(changeset, :account_number, generate_account_number())
       _ ->
         changeset

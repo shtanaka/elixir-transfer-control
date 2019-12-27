@@ -11,21 +11,21 @@ defmodule Tfcon.Bank do
   alias Tfcon.Accounts.User
 
   @doc """
-  transfer amouunt from one user to another. changes both users.
+  transfer amount from one user to another. changes both users.
 
   ## Examples
 
-      iex> deposit(user, 30)
-      {:ok, %User{}} # with amount increased by 30
+      iex> transfer(from, to, 30)
+      {:ok, %{from: %User{}, to: %User}} # with amount increased by 30
 
-      iex> update_user(user, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+      iex> transfer(from, to, more_than_from_balance)
+      {:error, :from, %Ecto.Changeset{}, %{}}
 
   """
   def transfer(%User{} = from, %User{} = to, amount) do
     Multi.new()
-    # |> Multi.update(:from, User)
-    # |> User.changeset(%User{user | balance: user.balance + amount})
-    # |> Repo.update()
+    |> Multi.update(:from, Accounts.debit_changeset(from, amount))
+    |> Multi.update(:to, Accounts.credit_changeset(to, amount))
+    |> Repo.transaction()
   end
 end

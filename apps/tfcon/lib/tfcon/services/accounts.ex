@@ -101,4 +101,30 @@ defmodule Tfcon.Accounts do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking user debit.
+
+  ## Examples
+
+      iex> debit_changeset(user, 300) # for a user with 1k in balance
+      %Ecto.Changeset{source: %User{}, changes: %{balance: 700}
+
+  """
+  def debit_changeset(%User{} = user, amount) do
+    User.changeset(user, %{ balance: user.balance - amount })
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking user credit.
+
+  ## Examples
+
+      iex> debit_changeset(user, 300) # for a user with 1k in balance
+      %Ecto.Changeset{source: %User{}, changes: %{balance: 1300}
+
+  """
+  def credit_changeset(%User{} = user, amount) do
+    User.changeset(user, %{ balance: user.balance + amount })
+  end
 end
