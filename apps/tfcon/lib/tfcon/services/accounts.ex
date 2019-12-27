@@ -4,8 +4,8 @@ defmodule Tfcon.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias Tfcon.Repo
 
+  alias Tfcon.Repo
   alias Tfcon.Accounts.User
 
   @doc """
@@ -87,6 +87,51 @@ defmodule Tfcon.Accounts do
   """
   def delete_user(%User{} = user) do
     Repo.delete(user)
+  end
+
+  @doc """
+  Change user password.
+
+  ## Examples
+
+      iex> change_user_password(user, password)
+      {:ok, %User{}}
+
+      iex> change_user_password(user, "")
+      {:error, :invalid_password}
+
+  """
+  def change_user_password(%User{} = user, password) do
+    user
+    |> User.changeset(%{password: password})
+    |> Repo.update()
+  end
+
+  @doc """
+  Returns an authenticated user for requests.
+
+  ## Examples
+
+      iex> authenticate_user(valid_account_number, valid_password) # for a user with 1k in balance
+      {:ok, %User{}}
+
+      iex> authenticate_user(invalid_account_number, invalid_password) # for a user with 1k in balance
+      {:error, :invalid_credentials}
+
+  """
+  def authenticate_user(account_number, plain_text_password) do
+    query = from u in User, select: u, where: u.account_number == ^account_number
+
+    case Repo.one(query) do
+      nil ->
+        {:error, :invalid_credentials}
+      user ->
+        if Bcrypt.verify_pass(plain_text_password, user.password) do
+          {:ok, user}
+        else
+          {:error, :invalid_credentials}
+        end
+    end
   end
 
   @doc """

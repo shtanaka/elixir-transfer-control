@@ -6,9 +6,13 @@ defmodule Tfcon.AccountsTest do
   describe "users" do
     alias Tfcon.Accounts.User
 
-    @valid_attrs %{name: "some name"}
+    @valid_password "somepassword"
+    @updated_password "someupdatedpassword"
+    @not_registered_password "somepasswords"
+    @invalid_password "aaa"
+    @valid_attrs %{name: "some name", password: @valid_password}
     @update_attrs %{name: "some updated name"}
-    @invalid_attrs %{name: nil}
+    @invalid_attrs %{name: nil, password: @invalid_password}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -29,7 +33,7 @@ defmodule Tfcon.AccountsTest do
       assert Accounts.get_user!(user.user_id) == user
     end
 
-    test "create_user/1 with valid data creates a user" do
+    test "create_user/1 with valid data creates an user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.name == "some name"
     end
@@ -55,6 +59,33 @@ defmodule Tfcon.AccountsTest do
       user = user_fixture()
       assert {:ok, %User{}} = Accounts.delete_user(user)
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.user_id) end
+    end
+
+    test "authenticate_user/2 with valid account_and_password authenticates user" do
+      user = user_fixture()
+      assert {:ok, %User{}} = Accounts.authenticate_user(user.account_number, @valid_password)
+    end
+
+    test "authenticate_user/2 with invalid password does not authenticate user" do
+      %User{account_number: account_number} = user_fixture()
+      assert {:error, :invalid_credentials} = Accounts.authenticate_user(account_number, @not_registered_password)
+    end
+
+    test "authenticate_user/2 with invalid account_number does not authenticate user" do
+      assert {:error, :invalid_credentials} = Accounts.authenticate_user(999999999, @valid_password)
+    end
+
+    test "change_user_password/2 with valid password successfully completes" do
+      %User{account_number: account_number} = user = user_fixture()
+      Accounts.change_user_password(user, @updated_password)
+      assert {:ok, %User{}} = Accounts.authenticate_user(account_number, @updated_password)
+      assert {:error, :invalid_credentials} = Accounts.authenticate_user(account_number, @valid_password)
+    end
+
+    test "change_user_password/2 with invalid password does not complete" do
+      %User{account_number: account_number} = user = user_fixture()
+      assert {:error, %Ecto.Changeset{valid?: false}} = Accounts.change_user_password(user, @invalid_password)
+      assert {:ok, %User{}} = Accounts.authenticate_user(account_number, @valid_password)
     end
 
     test "change_user/1 returns a user changeset" do
