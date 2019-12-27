@@ -41,5 +41,10 @@ defmodule Tfcon.BankTest do
       {from, to} = from_to_fixture()
       assert {:error, :from, %Ecto.Changeset{valid?: false}, %{}} = Bank.transfer(from, to, 1100)
     end
+
+    test "transfer/3 does not transfer money from one user to another if transfer amount is negative" do
+      {from, to} = from_to_fixture()
+      assert {:error, :amount_negative} = Bank.transfer(from, to, -1100)
+    end
   end
 end

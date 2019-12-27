@@ -21,7 +21,11 @@ defmodule Tfcon.Bank do
       iex> transfer(from, to, more_than_from_balance)
       {:error, :from, %Ecto.Changeset{}, %{}}
 
+      iex> transfer(from, to, negative_amount)
+      {:error, :amount_negative}
+
   """
+  def transfer(%User{} = _, %User{} = _, amount) when amount < 0, do: {:error, :amount_negative}
   def transfer(%User{} = from, %User{} = to, amount) do
     Multi.new()
     |> Multi.update(:from, Accounts.debit_changeset(from, amount))
