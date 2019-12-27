@@ -22,6 +22,10 @@ defmodule Tfcon.Umbrella.MixProject do
   # Dependencies listed here are available only for this project
   # and cannot be accessed from applications inside the apps folder
   defp deps do
-    []
+    [
+      {:guardian, "~> 1.2"},
+      {:comeonin, "~> 5.1"},
+      {:bcrypt_elixir, "~> 2.0"}
+    ]
   end
 end

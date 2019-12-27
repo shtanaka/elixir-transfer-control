@@ -10,6 +10,11 @@ config :tfcon, Tfcon.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+# Guardian Configuration - Secret key is used for generating JWT Token
+config :tfcon, Tfcon.Guardian,
+  issuer: "tfcon",
+  secret_key: "U57Kh9yo1OURa5XOJ8PPUkffb31gbr7eGdJysQ0h4fleRvxfJcXcFRsnbGni+l5p"
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

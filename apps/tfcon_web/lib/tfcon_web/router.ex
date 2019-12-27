@@ -11,6 +11,8 @@ defmodule TfconWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.LoadResource
   end
 
   scope "/", TfconWeb do
@@ -19,8 +21,10 @@ defmodule TfconWeb.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", TfconWeb do
-  #   pipe_through :api
-  # end
+  scope "/api/v1", TfconWeb do
+    post "/auth", AuthController, :create
+
+    pipe_through :api
+    # resources "/users", UserController
+  end
 end
