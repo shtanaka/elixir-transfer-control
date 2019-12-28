@@ -1,13 +1,13 @@
 defmodule Tfcon.Guardian.ErrorHandler do
   import Plug.Conn
-  alias Tfcon.Json.ErrorHandler, as: JsonErrorHandler
+  alias Tfcon.JsonHandler
 
   @behaviour Guardian.Plug.ErrorHandler
   @impl Guardian.Plug.ErrorHandler
 
   def auth_error(conn, {_type, _reason}, _opts) do
     body =
-      JsonErrorHandler.error_json(%{errors: ["You are not authorized."]})
+      JsonHandler.error_json(%{errors: ["You are not authorized."]})
       |> Jason.encode!()
 
     conn
