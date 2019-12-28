@@ -30,8 +30,9 @@ defmodule TfconWeb.Router do
 
   scope "/api/v1", TfconWeb do
     post "/auth", AuthController, :create
+    resources "/users", UserController, param: "account_number", only: [:create]
 
     pipe_through :ensure_auth
-    resources "/users", UserController, param: "account_number"
+    resources "/users", UserController, param: "account_number", except: [:create]
   end
 end

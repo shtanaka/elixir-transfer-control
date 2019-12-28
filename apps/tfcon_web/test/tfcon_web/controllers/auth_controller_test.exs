@@ -5,7 +5,9 @@ defmodule TfconWeb.AuthControllerTest do
     @invalid_password "asappp"
     use Tfcon.Fixtures, [:user]
 
-    test "POST /api/v1/auth returns valid token for valid account number and password", %{conn: conn} do
+    test "POST /api/v1/auth returns valid token for valid account number and password", %{
+      conn: conn
+    } do
       user = user_fixture()
 
       request_data = %{account_number: user.account_number, password: @valid_password}
@@ -15,7 +17,7 @@ defmodule TfconWeb.AuthControllerTest do
         |> post("/api/v1/auth", request_data)
         |> json_response(200)
 
-      assert %{"token" => token} = response
+      assert %{"data" => %{"token" => token}, "status" => "success"} = response
     end
 
     test "POST /api/v1/auth returns error for invalid fields", %{conn: conn} do
@@ -28,8 +30,7 @@ defmodule TfconWeb.AuthControllerTest do
         |> post("/api/v1/auth", request_data)
         |> json_response(401)
 
-      assert %{"errors" => ["Invalid credentials"]} = response
+      assert %{"data" => %{"errors" => ["Invalid credentials"]}, "status" => "error"} = response
     end
   end
-
 end

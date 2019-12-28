@@ -131,10 +131,10 @@ defmodule Tfcon.Accounts do
 
   ## Examples
 
-      iex> authenticate_user(valid_account_number, valid_password) # for a user with 1k in balance
+      iex> authenticate_user(valid_account_number, valid_password)
       {:ok, %User{}}
 
-      iex> authenticate_user(invalid_account_number, invalid_password) # for a user with 1k in balance
+      iex> authenticate_user(invalid_account_number, invalid_password)
       {:error, "Invalid credentials"}
 
   """
