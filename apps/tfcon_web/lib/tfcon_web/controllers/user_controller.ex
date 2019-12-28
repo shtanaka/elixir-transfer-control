@@ -2,11 +2,9 @@ defmodule TfconWeb.UserController do
   use TfconWeb, :controller
 
   alias Tfcon.{Accounts, Guardian}
-
   def index(conn, _) do
     render(conn, "index.json", %{users: Accounts.list_users()})
   end
-
   def show(conn, %{"account_number" => account_number}) do
     {account_number, _} = Integer.parse(account_number)
     user = Accounts.get_user_by_account_number!(account_number)

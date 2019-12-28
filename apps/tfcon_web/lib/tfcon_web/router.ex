@@ -33,6 +33,8 @@ defmodule TfconWeb.Router do
     resources "/users", UserController, param: "account_number", only: [:create]
 
     pipe_through :ensure_auth
+
     resources "/users", UserController, param: "account_number", except: [:create]
+    get "/bank/my_account", BankController, :my_account
   end
 end
