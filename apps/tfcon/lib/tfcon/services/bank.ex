@@ -4,9 +4,9 @@ defmodule Tfcon.Bank do
   """
 
   import Ecto.Query, warn: false
-  alias Tfcon.Repo
   alias Ecto.Multi
-
+  alias Tfcon.Repo
+  alias Tfcon.Bank.BankTransaction
   alias Tfcon.Accounts
   alias Tfcon.Accounts.User
 
@@ -36,9 +36,16 @@ defmodule Tfcon.Bank do
       do: {:error, :no_self_transfer}
   def transfer(%User{} = _, %User{} = _, amount) when amount <= 0, do: {:error, :amount_negative}
   def transfer(%User{} = from, %User{} = to, amount) do
+    float_amount = amount / 1
+
     Multi.new()
-    |> Multi.update(:from, Accounts.debit_changeset(from, amount))
-    |> Multi.update(:to, Accounts.credit_changeset(to, amount))
+    |> Multi.update(:from, Accounts.debit_changeset(from, float_amount))
+    |> Multi.update(:to, Accounts.credit_changeset(to, float_amount))
+    |> Multi.insert(:bank_transaction, %BankTransaction{
+      from_id: from.user_id,
+      to_id: to.user_id,
+      amount: float_amount
+    })
     |> Repo.transaction()
   end
 end

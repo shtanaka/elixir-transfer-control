@@ -9,9 +9,9 @@ defmodule Tfcon.Accounts.User do
   @primary_key {:user_id, :binary_id, autogenerate: true}
   schema "users" do
     field :name, :string
-    field :account_number, :integer, unique: true
     field :password, :string
     field :balance, :float, default: 1000.0
+    field :account_number, :integer, unique: true
 
     timestamps()
   end

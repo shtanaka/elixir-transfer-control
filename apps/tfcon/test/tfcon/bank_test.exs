@@ -1,8 +1,9 @@
 defmodule Tfcon.BankTest do
   use Tfcon.DataCase
 
-  alias Tfcon.Accounts
   alias Tfcon.Bank
+  alias Tfcon.Bank.BankTransaction
+  alias Tfcon.Accounts
   alias Tfcon.Accounts.User
 
   describe "users" do
@@ -50,6 +51,14 @@ defmodule Tfcon.BankTest do
     test "transfer/3 does not transfer money from for the same account" do
       {from, _} = from_to_fixture()
       assert {:error, :no_self_transfer} = Bank.transfer(from, from, 1000)
+    end
+
+    test "transfer/3 saves a report on money transfer" do
+      {from, to} = from_to_fixture()
+      assert {:ok, %{bank_transaction: bank_transaction}} = Bank.transfer(from, to, 900)
+      assert bank_transaction.from_id == from.user_id
+      assert bank_transaction.to_id == to.user_id
+      assert bank_transaction.amount == 900
     end
   end
 end
