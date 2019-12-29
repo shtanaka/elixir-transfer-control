@@ -175,7 +175,8 @@ defmodule Tfcon.Accounts do
 
   """
   def debit_changeset(%User{} = user, amount) do
-    User.changeset(user, %{ balance: user.balance - amount })
+    new_balance = Float.round(user.balance - amount, 2)
+    User.changeset(user, %{ balance: new_balance })
   end
 
   @doc """
@@ -188,6 +189,7 @@ defmodule Tfcon.Accounts do
 
   """
   def credit_changeset(%User{} = user, amount) do
-    User.changeset(user, %{ balance: user.balance + amount })
+    new_balance = Float.round(user.balance + amount, 2)
+    User.changeset(user, %{ balance: new_balance })
   end
 end

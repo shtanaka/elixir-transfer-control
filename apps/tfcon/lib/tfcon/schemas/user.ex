@@ -24,6 +24,7 @@ defmodule Tfcon.Accounts.User do
     |> unique_constraint(:account_number)
     |> validate_required([:name, :account_number])
     |> validate_number(:balance, greater_than_or_equal_to: 0.0)
+    |> put_validate_balance_error_message()
     |> validate_length(:password, min: 6)
     |> put_password_hash()
   end
@@ -37,8 +38,23 @@ defmodule Tfcon.Accounts.User do
   end
   defp put_account_number(changeset), do: changeset
 
-  defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+  defp put_password_hash(
+         %Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset
+       ) do
     put_change(changeset, :password, Bcrypt.hash_pwd_salt(password))
   end
   defp put_password_hash(changeset), do: changeset
+
+  defp put_validate_balance_error_message(
+         %Ecto.Changeset{valid?: false, errors: _} = changeset
+       ) do
+    update_in(
+      changeset.errors,
+      &Enum.map(&1, fn
+        {:balance, _} -> {:balance, "Not enough balance"}
+        {_key, _error} = tuple -> tuple
+      end)
+    )
+  end
+  defp put_validate_balance_error_message(changeset), do: changeset
 end

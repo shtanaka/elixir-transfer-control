@@ -46,5 +46,10 @@ defmodule Tfcon.BankTest do
       {from, to} = from_to_fixture()
       assert {:error, :amount_negative} = Bank.transfer(from, to, -1100)
     end
+
+    test "transfer/3 does not transfer money from for the same account" do
+      {from, _} = from_to_fixture()
+      assert {:error, :no_self_transfer} = Bank.transfer(from, from, 1000)
+    end
   end
 end

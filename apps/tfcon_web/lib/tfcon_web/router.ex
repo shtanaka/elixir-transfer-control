@@ -37,7 +37,7 @@ defmodule TfconWeb.Router do
   scope "/api/v1/users", TfconWeb do
     pipe_through :api
 
-    resources "/ ", UserController, param: "account_number", only: [:create]
+    resources "/", UserController, param: "account_number", only: [:create]
 
     pipe_through :ensure_auth
 
@@ -49,6 +49,6 @@ defmodule TfconWeb.Router do
     pipe_through :ensure_auth
 
     get "/my_account", BankController, :my_account
-
+    post "/transfer", BankController, :transfer
   end
 end

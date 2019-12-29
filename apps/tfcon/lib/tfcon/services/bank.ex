@@ -24,8 +24,17 @@ defmodule Tfcon.Bank do
       iex> transfer(from, to, negative_amount)
       {:error, :amount_negative}
 
+      iex> transfer(from, from, negative_amount)
+      {:error, :no_self_transfer}
   """
-  def transfer(%User{} = _, %User{} = _, amount) when amount < 0, do: {:error, :amount_negative}
+  def transfer(
+        %User{account_number: from_account_number},
+        %User{account_number: to_account_number},
+        _
+      )
+      when from_account_number == to_account_number,
+      do: {:error, :no_self_transfer}
+  def transfer(%User{} = _, %User{} = _, amount) when amount <= 0, do: {:error, :amount_negative}
   def transfer(%User{} = from, %User{} = to, amount) do
     Multi.new()
     |> Multi.update(:from, Accounts.debit_changeset(from, amount))
