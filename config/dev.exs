@@ -1,6 +1,5 @@
 use Mix.Config
 
-# Configure your database
 config :tfcon, Tfcon.Repo,
   username: System.get_env("DB_USERNAME"),
   password: System.get_env("DB_PASSWORD"),
