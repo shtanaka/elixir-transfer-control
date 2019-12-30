@@ -1,12 +1,11 @@
-defmodule Tfcon.BankTest do
+defmodule Tfcon.BankReportTest do
   use Tfcon.DataCase
   import Mock
 
 
-  describe "users" do
+  describe "bank_reports" do
     alias Tfcon.Bank
     alias Tfcon.BankReports
-    alias Tfcon.Bank.BankTransaction
     alias Tfcon.Accounts
     alias Tfcon.Accounts.User
     alias Tfcon.Utils.DateUtils
@@ -32,7 +31,7 @@ defmodule Tfcon.BankTest do
 
       # transactions are performed in different dates
 
-      with_mock DateUtils, naive_now: fn _ -> @mock_date_month end do
+      with_mock DateUtils, naive_now: fn _ -> @mock_date_today end do
         Bank.transfer(from, to, 50)
       end
 

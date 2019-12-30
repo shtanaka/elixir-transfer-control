@@ -6,7 +6,7 @@ defmodule Tfcon.BankTest do
   alias Tfcon.Accounts
   alias Tfcon.Accounts.User
 
-  describe "users" do
+  describe "bank" do
     def from_to_fixture(attrs \\ %{}) do
       {:ok, from} =
         attrs

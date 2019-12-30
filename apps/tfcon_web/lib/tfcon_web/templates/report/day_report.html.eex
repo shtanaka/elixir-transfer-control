@@ -1,6 +1,6 @@
 <div>
-  <h2>Transferencias de hoje</h2>
-  <h4>Total transferido no periodo: <%= @total %></h4>
+  <h2>Transferências de hoje</h2>
+  <h4>Total transferido no período: <%= @total %></h4>
 </div>
 <table>
   <tr>
