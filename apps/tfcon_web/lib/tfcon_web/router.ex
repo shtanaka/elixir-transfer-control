@@ -25,7 +25,10 @@ defmodule TfconWeb.Router do
   scope "/", TfconWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/day_report", ReportController, :day_report
+    get "/month_report", ReportController, :month_report
+    get "/year_report", ReportController, :year_report
+    get "/all_time_report", ReportController, :all_time_report
   end
 
   scope "/api/v1", TfconWeb do

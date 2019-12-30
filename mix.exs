@@ -25,7 +25,8 @@ defmodule Tfcon.Umbrella.MixProject do
     [
       {:guardian, "~> 1.2"},
       {:comeonin, "~> 5.1"},
-      {:bcrypt_elixir, "~> 2.0"}
+      {:bcrypt_elixir, "~> 2.0"},
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 end

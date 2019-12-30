@@ -1,0 +1,18 @@
+<div>
+  <h2>Transferências do ano</h2>
+  <h4>Total transferido no período: <%= @total %></h4>
+</div>
+<table>
+  <tr>
+    <th>Id da transação</th>
+    <th>Data da transferência</th>
+    <th>Valor Transferido</th>
+  </tr>
+  <%= for {bank_transaction_id, inserted_at, amount} <- @transactions do %>
+    <tr>
+      <td><%= bank_transaction_id %></td>
+      <td><%= inserted_at %></td>
+      <td><%= amount %></td>
+    </tr>
+  <% end %>
+</table>

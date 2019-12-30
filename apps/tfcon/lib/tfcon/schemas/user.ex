@@ -1,17 +1,18 @@
 defmodule Tfcon.Accounts.User do
   use Ecto.Schema
-
-  import Ecto.Changeset
   import Ecto.Query, warn: false
+  import Ecto.Changeset
 
   alias Tfcon.Repo
+  alias Tfcon.Utils.DateUtils
+  @timestamps_opts [autogenerate: {DateUtils, :naive_now, [:naive_datetime]}]
 
   @primary_key {:user_id, :binary_id, autogenerate: true}
   schema "users" do
     field :name, :string
-    field :account_number, :integer, unique: true
     field :password, :string
     field :balance, :float, default: 1000.0
+    field :account_number, :integer, unique: true
 
     timestamps()
   end
