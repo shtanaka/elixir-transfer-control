@@ -10,6 +10,7 @@ defmodule Tfcon.Bank do
   alias Tfcon.Bank.BankTransaction
   alias Tfcon.Accounts
   alias Tfcon.Accounts.User
+  alias Tfcon.Utils.CurrencyUtils
 
   @doc """
   transfer amount from one user to another. changes both users.
@@ -28,6 +29,14 @@ defmodule Tfcon.Bank do
       iex> transfer(from, from, negative_amount)
       {:error, :no_self_transfer}
   """
+  def transfer(
+        %User{account_number: from_account_number},
+        %User{account_number: to_account_number},
+        _
+      )
+      when from_account_number == to_account_number,
+      do: {:error, :no_self_transfer}
+  def transfer(%User{} = _, %User{} = _, amount) when amount <= 0, do: {:error, :amount_negative}
   def transfer(%User{} = from, %User{} = to, amount) do
     float_amount = amount / 1
 
@@ -44,12 +53,24 @@ defmodule Tfcon.Bank do
     )
     |> Repo.transaction()
   end
-  def transfer(
-        %User{account_number: from_account_number},
-        %User{account_number: to_account_number},
-        _
-      )
-      when from_account_number == to_account_number,
-      do: {:error, :no_self_transfer}
-  def transfer(%User{} = _, %User{} = _, amount) when amount <= 0, do: {:error, :amount_negative}
+
+  def withdraw(%User{} = _, amount) when amount <= 0, do: {:error, :amount_negative}
+  def withdraw(%User{} = from, amount) do
+    Accounts.update_user(from, %{balance: Float.round(from.balance - amount / 1, 2)})
+    |> log_withdraw(amount)
+  end
+
+  defp log_withdraw({:ok, updated_from} = data, amount) do
+    IO.puts(
+      "Withdraw #{CurrencyUtils.float_to_brl(amount)} successfully from account ##{
+        updated_from.account_number
+      }."
+    )
+
+    data
+  end
+  defp log_withdraw({:error, _} = data, _) do
+    IO.puts("Couldn't withdraw. Not enough balance.")
+    data
+  end
 end

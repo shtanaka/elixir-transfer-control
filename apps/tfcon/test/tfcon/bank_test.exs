@@ -33,11 +33,6 @@ defmodule Tfcon.BankTest do
       assert updated_to.balance == 1900.0
     end
 
-    test "transfer/3 does not transfer a negative amount" do
-      {from, to} = from_to_fixture()
-      assert {:ok, %{from: updated_from, to: updated_to}} = Bank.transfer(from, to, 900)
-    end
-
     test "transfer/3 does not transfer money from one user to another if balance is below transfer amount" do
       {from, to} = from_to_fixture()
       assert {:error, :from, %Ecto.Changeset{valid?: false}, %{}} = Bank.transfer(from, to, 1100)
@@ -59,6 +54,22 @@ defmodule Tfcon.BankTest do
       assert bank_transaction.from_id == from.user_id
       assert bank_transaction.to_id == to.user_id
       assert bank_transaction.amount == 900
+    end
+
+    test "withdraw/2 properly withdraw money" do
+      {from, _} = from_to_fixture()
+      assert {:ok, from} = Bank.withdraw(from, 900)
+      assert from.balance == 100
+    end
+
+    test "withdraw/2 wont withdraw if no limit" do
+      {from, _} = from_to_fixture()
+      assert {:error, _} = Bank.withdraw(from, 1100)
+    end
+
+    test "withdraw/2 wont withdraw if amount is negative" do
+      {from, _} = from_to_fixture()
+      assert {:error, :amount_negative} = Bank.withdraw(from, -1100)
     end
   end
 end
