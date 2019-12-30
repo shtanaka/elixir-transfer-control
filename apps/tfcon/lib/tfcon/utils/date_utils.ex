@@ -48,4 +48,11 @@ defmodule Tfcon.Utils.DateUtils do
 
     naive_first_day_of_year
   end
+
+  def format_date_to_read(date) do
+    d = [date.day, date.month, date.year] |> Enum.join("/")
+    t = [date.hour, date.minute, date.second] |> Enum.join(":")
+
+    d <> " " <> t
+  end
 end

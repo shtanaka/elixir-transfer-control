@@ -2,14 +2,14 @@ defmodule Tfcon.BankTest do
   use Tfcon.DataCase
   import Mock
 
-  alias Tfcon.Bank
-  alias Tfcon.BankReports
-  alias Tfcon.Bank.BankTransaction
-  alias Tfcon.Accounts
-  alias Tfcon.Accounts.User
-  alias Tfcon.Utils.DateUtils
 
   describe "users" do
+    alias Tfcon.Bank
+    alias Tfcon.BankReports
+    alias Tfcon.Bank.BankTransaction
+    alias Tfcon.Accounts
+    alias Tfcon.Accounts.User
+    alias Tfcon.Utils.DateUtils
     @mock_date_today NaiveDateTime.add(DateUtils.naive_today(), 3600, :second)
     @mock_date_month DateUtils.naive_first_day_of_month()
     @mock_date_year DateUtils.naive_first_day_of_year()
