@@ -1,4 +1,4 @@
-defmodule Tfcon.Reports do
+defmodule Tfcon.BankReports do
   import Ecto.Query, warn: false
   alias Tfcon.Repo
   alias Tfcon.Bank.BankTransaction
@@ -15,9 +15,9 @@ defmodule Tfcon.Reports do
   @doc """
   return list of all bank transactions for today
   """
-  def all_bank_transactions_of_today() do
+  def bank_transactions_of_today() do
     query =
-      from bt in BankTransaction, where: bt.inserted_at > ^DateUtils.naive_today(), select: bt
+      from bt in BankTransaction, where: bt.inserted_at >= ^DateUtils.naive_today(), select: bt
 
     Repo.all(query)
   end
@@ -25,10 +25,10 @@ defmodule Tfcon.Reports do
   @doc """
   return list of all bank transactions of the month
   """
-  def all_bank_transactions_of_the_month() do
+  def bank_transactions_of_the_month() do
     query =
       from bt in BankTransaction,
-        where: bt.inserted_at > ^DateUtils.naive_first_day_of_month(),
+        where: bt.inserted_at >= ^DateUtils.naive_first_day_of_month(),
         select: bt
 
     Repo.all(query)
@@ -37,10 +37,10 @@ defmodule Tfcon.Reports do
   @doc """
   return list of all bank transactions of the year
   """
-  def all_bank_transactions_of_the_year() do
+  def bank_transactions_of_the_year() do
     query =
       from bt in BankTransaction,
-        where: bt.inserted_at > ^DateUtils.naive_first_day_of_year(),
+        where: bt.inserted_at >= ^DateUtils.naive_first_day_of_year(),
         select: bt
 
     Repo.all(query)

@@ -1,6 +1,8 @@
 defmodule Tfcon.Bank.BankTransaction do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Tfcon.Utils.DateUtils
+  @timestamps_opts [autogenerate: {DateUtils, :naive_now, [:naive_datetime]}]
 
   @primary_key {:bank_transaction_id, :binary_id, autogenerate: true}
   schema "bank_transactions" do

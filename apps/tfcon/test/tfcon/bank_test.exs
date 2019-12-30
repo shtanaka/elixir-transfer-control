@@ -53,7 +53,7 @@ defmodule Tfcon.BankTest do
       assert {:error, :no_self_transfer} = Bank.transfer(from, from, 1000)
     end
 
-    test "transfer/3 saves a report on money transfer" do
+    test "transfer/3 saves a bank transaction entity when money is transferred" do
       {from, to} = from_to_fixture()
       assert {:ok, %{bank_transaction: bank_transaction}} = Bank.transfer(from, to, 900)
       assert bank_transaction.from_id == from.user_id
