@@ -18,16 +18,20 @@ services:
         source: .
         target: /app
     ports:
-      - "4000:4000"
+      - ${APP_PORT}:${APP_PORT}
     depends_on: 
       - db
     environment:
-      DB_PORT: 5432
-      DB_NAME: tfcon_dev
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: db
+      APP_PORT: ${APP_PORT}
+      APP_HOST: ${APP_HOST}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      GUARDIAN_SECRET_KEY: ${GUARDIAN_SECRET_KEY}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
     command:
-      - ./entrypoint.sh
+      - ./prod_entrypoint.sh
 volumes:
   pgdata:

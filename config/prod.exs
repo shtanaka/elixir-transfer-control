@@ -1,5 +1,21 @@
 use Mix.Config
 
+config :tfcon, Tfcon.Repo,
+  username: System.get_env("DB_USERNAME"),
+  password: System.get_env("DB_PASSWORD"),
+  database: System.get_env("DB_NAME"),
+  hostname: System.get_env("DB_HOST"),
+  port: System.get_env("DB_PORT"),
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
+config :tfcon, Tfcon.Guardian,
+  issuer: "tfcon",
+  secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+
+# Do not print debug messages in production
+config :logger, level: :info
+
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
 # when generating URLs.
@@ -10,8 +26,10 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :tfcon_web, TfconWeb.Endpoint,
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  url: [host: System.get_env("APP_HOST"), port: System.get_env("APP_PORT")],
+  http: [:inet6, port: String.to_integer(System.get_env("APP_PORT") || "4000")]
 
 # ## SSL Support
 #
@@ -46,10 +64,3 @@ config :tfcon_web, TfconWeb.Endpoint,
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
-
-# Do not print debug messages in production
-config :logger, level: :info
-
-# Finally import the config/prod.secret.exs which loads secrets
-# and configuration from environment variables.
-import_config "prod.secret.exs"
