@@ -41,11 +41,11 @@ defmodule Tfcon.Bank do
     Multi.new()
     |> Multi.update(:from, Accounts.debit_changeset(from, float_amount))
     |> Multi.update(:to, Accounts.credit_changeset(to, float_amount))
-    |> Multi.insert(:bank_transaction, %BankTransaction{
+    |> Multi.insert(:bank_transaction, BankTransaction.changeset(%BankTransaction{}, %{
       from_id: from.user_id,
       to_id: to.user_id,
       amount: float_amount
-    })
+    }))
     |> Repo.transaction()
   end
 end
