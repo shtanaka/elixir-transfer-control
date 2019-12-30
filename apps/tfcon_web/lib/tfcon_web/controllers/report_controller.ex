@@ -37,7 +37,7 @@ defmodule TfconWeb.ReportController do
 
   defp prepare_transactions(data) do
     Enum.map(data, fn tr ->
-      {tr.bank_transaction_id, DateUtils.format_date_to_read(tr.inserted_at),
+      {tr.bank_transaction_id, DateUtils.format_datetime_to_read(tr.inserted_at),
        CurrencyUtils.float_to_brl(tr.amount)}
     end)
   end

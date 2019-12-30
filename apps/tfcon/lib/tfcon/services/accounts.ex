@@ -1,6 +1,7 @@
 defmodule Tfcon.Accounts do
   @moduledoc """
-  The Accounts context.
+  The Accounts context is used for performing most of user operations and
+  preparing changesets for other service operations
   """
 
   import Ecto.Query, warn: false

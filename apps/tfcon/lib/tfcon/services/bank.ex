@@ -1,6 +1,7 @@
 defmodule Tfcon.Bank do
   @moduledoc """
-  The Accounts context.
+  The Bank context is used for perfoming regular bank operations,
+  like transfers and withdraw
   """
 
   import Ecto.Query, warn: false
@@ -27,6 +28,22 @@ defmodule Tfcon.Bank do
       iex> transfer(from, from, negative_amount)
       {:error, :no_self_transfer}
   """
+  def transfer(%User{} = from, %User{} = to, amount) do
+    float_amount = amount / 1
+
+    Multi.new()
+    |> Multi.update(:from, Accounts.debit_changeset(from, float_amount))
+    |> Multi.update(:to, Accounts.credit_changeset(to, float_amount))
+    |> Multi.insert(
+      :bank_transaction,
+      BankTransaction.changeset(%BankTransaction{}, %{
+        from_id: from.user_id,
+        to_id: to.user_id,
+        amount: float_amount
+      })
+    )
+    |> Repo.transaction()
+  end
   def transfer(
         %User{account_number: from_account_number},
         %User{account_number: to_account_number},
@@ -35,17 +52,4 @@ defmodule Tfcon.Bank do
       when from_account_number == to_account_number,
       do: {:error, :no_self_transfer}
   def transfer(%User{} = _, %User{} = _, amount) when amount <= 0, do: {:error, :amount_negative}
-  def transfer(%User{} = from, %User{} = to, amount) do
-    float_amount = amount / 1
-
-    Multi.new()
-    |> Multi.update(:from, Accounts.debit_changeset(from, float_amount))
-    |> Multi.update(:to, Accounts.credit_changeset(to, float_amount))
-    |> Multi.insert(:bank_transaction, BankTransaction.changeset(%BankTransaction{}, %{
-      from_id: from.user_id,
-      to_id: to.user_id,
-      amount: float_amount
-    }))
-    |> Repo.transaction()
-  end
 end

@@ -1,4 +1,8 @@
 defmodule Tfcon.BankReports do
+  @moduledoc """
+  The bank reports context is used for retrieving report data from the database.
+  """
+
   import Ecto.Query, warn: false
   alias Tfcon.Repo
   alias Tfcon.Bank.BankTransaction

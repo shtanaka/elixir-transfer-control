@@ -1,4 +1,15 @@
 defmodule Tfcon.Bank.BankTransaction do
+  @moduledoc """
+  This schema is used for recording all transactions in the API
+
+  All fields are required.
+
+  fields:
+  * amount - total of the money in the transaction
+  * from - user that transferred the ammount
+  * to - user that received the amount
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias Tfcon.Utils.DateUtils

@@ -26,7 +26,9 @@ defmodule Tfcon.Umbrella.MixProject do
       {:guardian, "~> 1.2"},
       {:comeonin, "~> 5.1"},
       {:bcrypt_elixir, "~> 2.0"},
-      {:mock, "~> 0.3.0", only: :test}
+      {:mock, "~> 0.3.0", only: :test},
+      {:earmark, "~> 1.2", only: :dev},
+      {:ex_doc, "~> 0.19", only: :dev}
     ]
   end
 end

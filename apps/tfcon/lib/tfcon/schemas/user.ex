@@ -1,4 +1,19 @@
 defmodule Tfcon.Accounts.User do
+  @moduledoc """
+  This schema is used for storing the user information.
+
+  Only name is required for create a user. However, you won't be able
+  to authenticate without a password
+
+  Account number and balance are auto generated.
+
+  fields:
+  * name - self described
+  * password - self described
+  * balance - user balance for transferring and withdraw
+  * account_number - humanized identification for performing banking operatons
+  """
+
   use Ecto.Schema
   import Ecto.Query, warn: false
   import Ecto.Changeset
