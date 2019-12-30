@@ -2,7 +2,6 @@ defmodule Tfcon.BankTest do
   use Tfcon.DataCase
 
   alias Tfcon.Bank
-  alias Tfcon.Bank.BankTransaction
   alias Tfcon.Accounts
   alias Tfcon.Accounts.User
 

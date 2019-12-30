@@ -80,5 +80,48 @@ defmodule TfconWeb.BankControllerTest do
                "data" => %{"errors" => %{"balance" => ["Not enough balance"]}}
              } = response
     end
+
+    test "POST /api/v1/bank/withdraw withdraws money", %{
+      conn: conn
+    } do
+      from = user_fixture()
+      {:ok, token, _} = Guardian.encode_and_sign(from)
+      request_data = %{amount: 900}
+
+      response =
+        conn
+        |> put_req_header("authorization", "Bearer #{token}")
+        |> post("/api/v1/bank/withdraw", request_data)
+        |> json_response(200)
+
+      assert %{
+               "status" => "success",
+               "data" => %{
+                 "message" => "value successfully debited from 1.",
+                 "user" => user
+               }
+             } = response
+
+      assert user["balance"] == 100.0
+    end
+
+    test "POST /api/v1/bank/withdraw wont withdraw beyond account amount", %{
+      conn: conn
+    } do
+      from = user_fixture()
+      {:ok, token, _} = Guardian.encode_and_sign(from)
+      request_data = %{amount: 1100}
+
+      response =
+        conn
+        |> put_req_header("authorization", "Bearer #{token}")
+        |> post("/api/v1/bank/withdraw", request_data)
+        |> json_response(400)
+
+      assert %{
+               "status" => "error",
+               "data" => %{"errors" => %{"balance" => ["Not enough balance"]}}
+             } = response
+    end
   end
 end

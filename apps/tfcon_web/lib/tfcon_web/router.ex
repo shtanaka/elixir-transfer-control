@@ -53,5 +53,6 @@ defmodule TfconWeb.Router do
 
     get "/my_account", BankController, :my_account
     post "/transfer", BankController, :transfer
+    post "/withdraw", BankController, :withdraw
   end
 end

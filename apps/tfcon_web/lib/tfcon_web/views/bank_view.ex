@@ -21,6 +21,14 @@ defmodule TfconWeb.BankView do
         "value successfully transfered from #{from.account_number} to #{to.account_number}."
     })
   end
+  def render("withdraw.json", %{user: user}) do
+    user_data = Map.take(user, @expanded_attrs)
+
+    JsonHandler.success_json(%{
+      user: user_data,
+      message: "value successfully debited from #{user.account_number}."
+    })
+  end
   def render("no_balance.json", %{changeset: changeset}) do
     errors =
       Changeset.traverse_errors(changeset, fn
