@@ -22,6 +22,9 @@ defmodule TfconWeb.BankView do
 
     JsonHandler.error_json(%{"errors" => errors})
   end
+  def render("no_self_transfer.json", _) do
+    JsonHandler.error_json(%{"errors" => ["You can't transfer money to yourself."]})
+  end
   def render("my_account.json", %{user: user}) do
     user_data = Map.take(user, @expanded_attrs)
     JsonHandler.success_json(%{user: user_data})

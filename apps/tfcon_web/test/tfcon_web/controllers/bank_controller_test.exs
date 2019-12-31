@@ -81,6 +81,45 @@ defmodule TfconWeb.BankControllerTest do
              } = response
     end
 
+    test "POST /api/v1/bank/transfer does not transfer if user does not exist", %{
+      conn: conn
+    } do
+      from = user_fixture()
+      to = second_user_fixture()
+      {:ok, token, _} = Guardian.encode_and_sign(from)
+      request_data = %{account_number: 999, amount: 900}
+
+      response =
+        conn
+        |> put_req_header("authorization", "Bearer #{token}")
+        |> post("/api/v1/bank/transfer", request_data)
+        |> json_response(404)
+
+      assert %{
+               "status" => "error",
+               "data" => %{"errors" => ["Entity not found."]}
+             } = response
+    end
+
+    test "POST /api/v1/bank/transfer does not transfer if is trying to transfer to yourself", %{
+      conn: conn
+    } do
+      from = user_fixture()
+      {:ok, token, _} = Guardian.encode_and_sign(from)
+      request_data = %{account_number: from.account_number, amount: 900}
+
+      response =
+        conn
+        |> put_req_header("authorization", "Bearer #{token}")
+        |> post("/api/v1/bank/transfer", request_data)
+        |> json_response(400)
+
+      assert %{
+               "status" => "error",
+               "data" => %{"errors" => ["You can't transfer money to yourself."]}
+             } = response
+    end
+
     test "POST /api/v1/bank/withdraw withdraws money", %{
       conn: conn
     } do
