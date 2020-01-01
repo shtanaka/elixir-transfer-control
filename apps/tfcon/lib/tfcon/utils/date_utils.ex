@@ -45,11 +45,13 @@ defmodule Tfcon.Utils.DateUtils do
       ~D[2019-12-1]
   """
   def utc_first_day_of_month() do
-    today = utc_today()
+    %{year: year, month: month} = utc_today()
+    month =
+      month
+      |> Integer.to_string()
+      |> String.pad_leading(2, "0")
 
-    {:ok, date} =
-      "#{today.year}-#{today.month}-01"
-      |> Date.from_iso8601()
+    {:ok, date} = "#{year}-#{month}-01" |> Date.from_iso8601()
 
     date
   end
