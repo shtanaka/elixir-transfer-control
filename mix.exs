@@ -28,7 +28,10 @@ defmodule Tfcon.Umbrella.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:mock, "~> 0.3.0", only: :test},
       {:earmark, "~> 1.2", only: :dev},
-      {:ex_doc, "~> 0.19", only: :dev}
+      {:ex_doc, "~> 0.19", only: :dev},
+      {:phoenix_swagger, "~> 0.8"},
+      {:ex_json_schema, "~> 0.5"},
+      {:cors_plug, "~> 2.0"}
     ]
   end
 end
