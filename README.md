@@ -13,4 +13,8 @@ To build and start your Phoenix server:
 
 ## Deploy
 
-In development
+Deploy is performed to a EC2 instance. for deploying, up the docker image in AWS EC2 using `docker-compose-prod.yml` via `sudo docker-compose -f docker-compose-prod.yml up -d --build`
+
+## API documentation
+
+API Docs is available in `/swagger` route of the application

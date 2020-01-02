@@ -13,8 +13,11 @@ defmodule TfconWeb.AuthController do
   swagger_path :create do
     post "/api/v1/auth"
     summary "get auth data"
-    description "List all recorded activities"
-    response 200, "Ok", Schema.ref(:Auth)
+    description "get auth data"
+    parameters do
+      login_credentials :body, Schema.ref(:Auth), "Login credentials"
+    end
+    response 200, "Ok", Schema.ref(:AuthResponse)
   end
 
   defp login_reply(conn, {:ok, user}) do
@@ -30,16 +33,21 @@ defmodule TfconWeb.AuthController do
   def swagger_definitions do
     %{
       Auth: swagger_schema do
-        title "Authentication"
-        description "Authentication of application"
+        title "Authentication Response"
+        description "Authentication Response of application"
         properties do
           account_number :integer, "", required: true
           password :string, "", required: true
         end
-        example %{
-          account_number: 1,
-          password: "climbing"
-        }
+        example %{token: "token"}
+      end,
+      AuthResponse: swagger_schema do
+        title "Authentication"
+        description "Authentication of application"
+        properties do
+          token :string, "", required: true
+        end
+        example %{token: "token"}
       end
     }
   end
