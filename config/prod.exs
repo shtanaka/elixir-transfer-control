@@ -20,3 +20,13 @@ config :tfcon_web, TfconWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   url: [host: System.get_env("APP_HOST"), port: System.get_env("APP_PORT")],
   http: [:inet6, port: String.to_integer(System.get_env("APP_PORT") || "4000")]
+
+config :tfcon_web, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      router: TfconWeb.Router,
+      endpoint: TfconWeb.Endpoint
+    ]
+  }
+
+config :phoenix_swagger, json_library: Jason
