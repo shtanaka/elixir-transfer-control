@@ -13,6 +13,7 @@ done
 
 echo "\nPostgres is available: continuing with database setup..."
 
+MIX_ENV=prod mix phx.swagger.generate
 MIX_ENV=prod mix ecto.create
 MIX_ENV=prod mix ecto.migrate
 MIX_ENV=prod mix phx.server
