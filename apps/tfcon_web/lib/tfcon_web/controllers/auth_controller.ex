@@ -39,7 +39,10 @@ defmodule TfconWeb.AuthController do
           account_number :integer, "", required: true
           password :string, "", required: true
         end
-        example %{token: "token"}
+        example %{
+          account_number: 1,
+          password:  "mypassword"
+        }
       end,
       AuthResponse: swagger_schema do
         title "Authentication"
