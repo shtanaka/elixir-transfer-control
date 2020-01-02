@@ -15,6 +15,17 @@ config :tfcon, Tfcon.Guardian,
   issuer: "tfcon",
   secret_key: "U57Kh9yo1OURa5XOJ8PPUkffb31gbr7eGdJysQ0h4fleRvxfJcXcFRsnbGni+l5p"
 
+# Swagger Configuration
+config :tfcon_web, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      router: TfconWeb.Router,
+      endpoint: TfconWeb.Endpoint
+    ]
+  }
+
+config :phoenix_swagger, json_library: Jason
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

@@ -55,4 +55,20 @@ defmodule TfconWeb.Router do
     post "/transfer", BankController, :transfer
     post "/withdraw", BankController, :withdraw
   end
+
+  scope "/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :tfcon_web,
+      swagger_file: "swagger.json",
+      disable_validator: true
+  end
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0",
+        title: "Elixir Transfer Control"
+      }
+    }
+  end
 end
