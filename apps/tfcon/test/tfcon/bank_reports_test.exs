@@ -61,7 +61,11 @@ defmodule Tfcon.BankReportTest do
 
     test "bank_transactions_of_the_month/0 returns list of transactions of the month" do
       from_to_transactions_fixture()
-      assert length(BankReports.bank_transactions_of_the_month()) == 2
+      if @mock_date_month.month == 1 do
+        assert length(BankReports.bank_transactions_of_the_month()) == 3
+      else
+        assert length(BankReports.bank_transactions_of_the_month()) == 2
+      end
     end
 
     test "bank_transactions_of_today/0 returns list of transactions of today" do
